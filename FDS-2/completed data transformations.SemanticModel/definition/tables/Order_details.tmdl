@@ -1,0 +1,122 @@
+table Order_details
+	lineageTag: 0c5f6655-1837-429d-9970-8d2fce03ba96
+
+	measure 'Total Sales' = sum(Order_details[Order Value])
+		formatString: 0
+		lineageTag: 2fefb4bc-8ae9-4175-9e9d-59a14eecb4b1
+
+	measure 'Average Order Value' = ```
+			AVERAGE(Order_details[Order Value]) 
+			```
+		lineageTag: b1b7a3ba-03c3-4508-be60-8a42b0a8f61e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Deliveries' = ```
+			DISTINCTCOUNT(Order_details[Order Id]) 
+			```
+		formatString: 0
+		lineageTag: 458d6b9c-bb78-4bf1-9518-be8c0956ecc0
+
+	measure 'On-time Delivery %' = DIVIDE(COUNTROWS(FILTER(Delivery_details, Delivery_details[Time Taken (Min)] <= 30) ), COUNTROWS(Delivery_details) ) * 100
+		lineageTag: 498318d8-d66a-4109-9fa4-e09bc845ca59
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Order Id'
+		dataType: string
+		lineageTag: 8ded7dbf-629f-45cc-af96-2498e93a196c
+		summarizeBy: none
+		sourceColumn: Order Id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: caff230a-a3c2-471e-b8a3-fb21228ae47a
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Restaurant ID'
+		dataType: string
+		lineageTag: f8793492-b274-4fdb-9325-64e990287630
+		summarizeBy: none
+		sourceColumn: Restaurant ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a61bc592-d2e8-40e5-86f8-bebc8ddf2031
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		variation Variation
+			isDefault
+			relationship: 21790def-94e8-4807-9ce6-39ab2ab144df
+			defaultHierarchy: LocalDateTable_55d50a34-b613-4dbb-9a9f-1b9d9e61b757.'Date Hierarchy'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Time Ordered'
+		dataType: string
+		lineageTag: 9e198159-47c1-46df-b73d-fa07aa4d0976
+		summarizeBy: none
+		sourceColumn: Time Ordered
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type Of Order'
+		dataType: string
+		lineageTag: 6847684f-44c4-4e4f-a454-7df391752af0
+		summarizeBy: none
+		sourceColumn: Type Of Order
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Value'
+		dataType: int64
+		formatString: 0
+		lineageTag: bd89f87c-3e9d-4440-9056-ec16dd3eeb29
+		summarizeBy: sum
+		sourceColumn: Order Value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Order_details = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Sanjay Rangasamy\Downloads\QUESTION_Modeling1POWERBI.xlsx"), null, true),
+				    Order_details_Sheet = Source{[Item="Order_details",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Order_details_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Order Id", type text}, {"Customer ID", type text}, {"Restaurant ID", type text}, {"Order Date", type date}, {"Time Ordered", type any}, {"Type Of Order", type text}, {"Order Value", Int64.Type}, {"Column8", type any}, {"Column9", type any}, {"Column10", type any}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column8", "Column9", "Column10"})
+				in
+				    #"Removed Columns"
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

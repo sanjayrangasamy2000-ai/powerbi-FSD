@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Delivery_details","Delivery_person_details","Order_details","Restaurant_details","User_details"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Delivery_details
+ref table Delivery_person_details
+ref table Order_details
+ref table DateTableTemplate_6380080d-5ac3-4df9-93bd-3592c8213d1e
+ref table LocalDateTable_55d50a34-b613-4dbb-9a9f-1b9d9e61b757
+ref table Restaurant_details
+ref table User_details
+
+ref cultureInfo en-US
+

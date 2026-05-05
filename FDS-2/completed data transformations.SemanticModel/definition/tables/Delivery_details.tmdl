@@ -1,0 +1,105 @@
+table Delivery_details
+	lineageTag: 94d4b226-d642-45f5-ac0d-e382cc0b3bf2
+
+	column 'Order Id'
+		dataType: string
+		lineageTag: 5d123ecd-f6b9-49c4-807b-d27b004a1094
+		summarizeBy: none
+		sourceColumn: Order Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Delivery Person Id'
+		dataType: string
+		lineageTag: 691ae783-8693-418e-a255-a2180557e636
+		summarizeBy: none
+		sourceColumn: Delivery Person Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Order Picked'
+		dataType: string
+		lineageTag: e4e8c5dd-6665-45e1-8da9-b28c0c532998
+		summarizeBy: none
+		sourceColumn: Time Order Picked
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weather Conditions'
+		dataType: string
+		lineageTag: d6a10763-2738-4109-a136-a83c96222d83
+		summarizeBy: none
+		sourceColumn: Weather Conditions
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Road Traffic Density'
+		dataType: string
+		lineageTag: cefbb260-d87d-4976-b571-51074b02317b
+		summarizeBy: none
+		sourceColumn: Road Traffic Density
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Multiple Deliveries'
+		dataType: double
+		lineageTag: e19ecd87-ec80-41a7-a53f-374efff7b8ac
+		summarizeBy: sum
+		sourceColumn: Multiple Deliveries
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Festival
+		dataType: string
+		lineageTag: 7bfc05e7-d26e-4666-852b-15d7ab241ba4
+		summarizeBy: none
+		sourceColumn: Festival
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Taken (Min)'
+		dataType: int64
+		formatString: 0
+		lineageTag: d0386579-bfe9-4f3b-be4e-10a7109c6cab
+		summarizeBy: sum
+		sourceColumn: Time Taken (Min)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Delivery Person Ratings'
+		dataType: double
+		lineageTag: 870c943c-96c2-4bc0-89e5-342eead47bf0
+		summarizeBy: sum
+		sourceColumn: Delivery Person Ratings
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Tip
+		dataType: int64
+		formatString: 0
+		lineageTag: 6c77d3c6-fea4-4cdd-9e86-e5159e2af655
+		summarizeBy: sum
+		sourceColumn: Tip
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Delivery_details = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Sanjay Rangasamy\Downloads\QUESTION_Modeling1POWERBI.xlsx"), null, true),
+				    Delivery_details_Sheet = Source{[Item="Delivery_details",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Delivery_details_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Order Id", type text}, {"Delivery Person Id", type text}, {"Time Order Picked", type any}, {"Weather Conditions", type text}, {"Road Traffic Density", type text}, {"Multiple Deliveries", type number}, {"Festival", type text}, {"Time Taken (Min)", Int64.Type}, {"Delivery Person Ratings", type number}, {"Tip", Int64.Type}, {"Column11", type any}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column11"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

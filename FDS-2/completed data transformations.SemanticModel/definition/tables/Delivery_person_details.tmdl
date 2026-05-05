@@ -1,0 +1,51 @@
+table Delivery_person_details
+	lineageTag: 7a2cb44e-f9d5-40da-b933-ae75aa7039f7
+
+	column Delivery_person_ID
+		dataType: string
+		lineageTag: 95a1cb00-1965-4696-9e62-ca6a9f7c8650
+		summarizeBy: none
+		sourceColumn: Delivery_person_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Delivery_person_Age
+		dataType: double
+		lineageTag: 969c810d-9ed9-41ae-9284-3f8dc008da24
+		summarizeBy: none
+		sourceColumn: Delivery_person_Age
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Vehicle_condition
+		dataType: int64
+		formatString: 0
+		lineageTag: c2806927-8e77-415d-b882-5928a7c5ec4c
+		summarizeBy: none
+		sourceColumn: Vehicle_condition
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type_of_vehicle
+		dataType: string
+		lineageTag: 5630c81d-8e17-485b-833b-74b961ce617a
+		summarizeBy: none
+		sourceColumn: Type_of_vehicle
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Delivery_person_details = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Sanjay Rangasamy\Downloads\QUESTION_Modeling1POWERBI.xlsx"), null, true),
+				    Delivery_person_details_Sheet = Source{[Item="Delivery_person_details",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Delivery_person_details_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Delivery_person_ID", type text}, {"Delivery_person_Age", type number}, {"Vehicle_condition", Int64.Type}, {"Type_of_vehicle", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

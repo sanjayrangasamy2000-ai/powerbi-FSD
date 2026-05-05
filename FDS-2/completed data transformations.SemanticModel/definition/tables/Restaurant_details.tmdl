@@ -1,0 +1,59 @@
+table Restaurant_details
+	lineageTag: ebd3f64c-5191-437d-bc40-d0f9bc6239a6
+
+	column 'Restaurant ID'
+		dataType: string
+		lineageTag: 7f5bdb59-543e-4153-86b8-d99f37718e75
+		summarizeBy: none
+		sourceColumn: Restaurant ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: 5c242fa5-1863-4fec-8c32-e2c66a11f1d0
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cuisine Type'
+		dataType: string
+		lineageTag: a94f0464-4b6f-4378-8cf7-a22fbc3ab868
+		summarizeBy: none
+		sourceColumn: Cuisine Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dine-in Available'
+		dataType: string
+		lineageTag: 4f524cd8-f380-40fe-b761-8e6dbc090c85
+		summarizeBy: none
+		sourceColumn: Dine-in Available
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Food Category'
+		dataType: string
+		lineageTag: e106967d-febc-47af-8801-9caaae281cb5
+		summarizeBy: none
+		sourceColumn: Food Category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Restaurant_details = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Sanjay Rangasamy\Downloads\QUESTION_Modeling1POWERBI.xlsx"), null, true),
+				    Restaurant_details_Sheet = Source{[Item="Restaurant_details",Kind="Sheet"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Restaurant_details_Sheet,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Restaurant ID", type text}, {"Name", type text}, {"Cuisine Type", type text}, {"Dine-in Available", type text}, {"Food Category", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

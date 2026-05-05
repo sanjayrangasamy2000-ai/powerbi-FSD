@@ -1,0 +1,21 @@
+relationship 21790def-94e8-4807-9ce6-39ab2ab144df
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Order_details.'Order Date'
+	toColumn: LocalDateTable_55d50a34-b613-4dbb-9a9f-1b9d9e61b757.Date
+
+relationship AutoDetected_014e06e3-f12d-4018-9c34-021dfe5e358f
+	fromColumn: Delivery_details.'Order Id'
+	toColumn: Order_details.'Order Id'
+
+relationship AutoDetected_17fa14e2-cc9c-462e-b128-84fee91db6d4
+	fromColumn: Delivery_details.'Delivery Person Id'
+	toColumn: Delivery_person_details.Delivery_person_ID
+
+relationship AutoDetected_d66d489a-1f4a-41a4-93ac-92433ceb7798
+	fromColumn: Order_details.'Restaurant ID'
+	toColumn: Restaurant_details.'Restaurant ID'
+
+relationship d8360543-7466-9a6b-682b-2b3e27701f74
+	fromColumn: Order_details.'Customer ID'
+	toColumn: User_details.'Customer ID'
+
